@@ -1,4 +1,4 @@
-#include <stdio.h>
+  #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
 #include <stdlib.h>
@@ -35,7 +35,7 @@ int main(void){
   gettimeofday(&t2, NULL);
   elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
   elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
-  printf("First case %f\n", elapsedTime);
+  printf("Execution time first case: %f ms \n", elapsedTime);
 
   // Second case
   gettimeofday(&t1, NULL);
@@ -47,5 +47,5 @@ int main(void){
   gettimeofday(&t2, NULL);
   elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
   elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;   // us to ms
-  printf("Second case %f\n", elapsedTime);
+  printf("Execution time second case: %f ms\n", elapsedTime);
 }
