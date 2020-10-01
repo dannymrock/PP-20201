@@ -1,5 +1,5 @@
-SRCS = saxpy.c
-TARG = saxpy.out
+SRCS = trap.c
+TARG = trap.out
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc-9	
