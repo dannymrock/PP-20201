@@ -5,10 +5,10 @@
 
 
 double f(double x);
-double trap_f (double a, double b, int n, double *  );
+double trap_f (double a, double b, int n);
 
 int main(int argc, char* argv[]){
-  double a, b, result;
+  double a, b, result = 0.0;
   int n;
   double t1, t2;
 
@@ -23,22 +23,31 @@ int main(int argc, char* argv[]){
 
   printf("Calcular el area aproximada bajo la curva f(x)= x^3 en el intervalo [%2.1f %2.1f], usando %d trapecios\n\n",a, b, n);
   
-  double total = 0;
+  
 
   t1 = omp_get_wtime();
 
-  #pragma omp parallel
+/*  #pragma omp parallel 
   { 
-    result = trap_f(a, b, n, &total);
+    double my_result = 0.0;// private scope
+    my_result = trap_f(a, b, n);
+
+    #pragma omp critical
+    result += my_result;
+  }*/
+ #pragma omp parallel reduction(+: result)
+  { 
+    result += trap_f(a, b, n);
   }
+
   t2 = omp_get_wtime();
   
-  printf("El area aproximada es: %.6f \n", total);
+  printf("El area aproximada es: %.6f \n", result);
   printf("Tiempo: %.2f segundos\n", t2 - t1);
   return 0;
 }
 
-double trap_f (double a, double b, int n, double * total){
+double trap_f (double a, double b, int n){
   double h, approx, x_i;
   int i;
   double local_a, local_b;
@@ -49,15 +58,11 @@ double trap_f (double a, double b, int n, double * total){
 
   h = (b - a) / n;
 
-
   assert(n % nt == 0);
-
 
   local_n = n / nt;
   local_a = a + local_n * h * my_rank; 
   local_b = local_a + local_n * h ;
-
-
 
   approx = (f(local_a) + f(local_b))/2;
   for (i = 1; i <= local_n - 1; i++){
@@ -68,8 +73,8 @@ double trap_f (double a, double b, int n, double * total){
 
   printf("approx= %f \n", approx);
 
-  #pragma omp critical
-  *total +=  approx;
+  //#pragma omp critical
+ // *total +=  approx;
   return approx;
 
 }
