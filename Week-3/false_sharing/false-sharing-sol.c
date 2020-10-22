@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     n = strtol(argv[2], NULL, 10);
   }
   
-  double res_v[thread_count][64];
+  double res_v[thread_count][8];
   double res_global;
 
 

@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     n = strtol(argv[2], NULL, 10);
   }
   
-  double res_v[thread_count][8]; // linea de cache diferente
+  double res_v[thread_count]; 
   double res_global;
 
 
@@ -22,15 +22,15 @@ int main(int argc, char* argv[]){
   private(i) shared(res_v, n)
   {
     int my_rank = omp_get_thread_num();
-    res_v[my_rank][0]= 0.0;
+    res_v[my_rank]= 0.0;
 #pragma omp for schedule(static,1)
     for (i = 0; i < n; i++){
-      res_v[my_rank][0] += i / 4.0;
+      res_v[my_rank] += i / 4.0;
     }
   }
 
   for (i = 0; i < thread_count; i++)
-    res_global += res_v[i][0];
+    res_global += res_v[i];
   
   t2 = omp_get_wtime();
   
