@@ -27,4 +27,4 @@ run:
 	mpirun --oversubscribe -np 4 ./take_time.out
 
 run-dist:
-	mpirun --oversubscribe -np 8 -host localhost,worker1,worker3 -mca pml ob1 -mca btl tcp,self -mca btl_tcp_if_include br0,lo ./take_time.out
+	mpirun --oversubscribe -np 16 -host localhost,worker1,worker2,worker3 -mca pml ob1 -mca btl tcp,self -mca btl_tcp_if_include br0,lo ./take_time.out
