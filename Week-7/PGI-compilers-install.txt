@@ -1,0 +1,7 @@
+wget https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9_20.9_amd64.deb https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-2020_20.9_amd64.deb https://developer.download.nvidia.com/hpc-sdk/20.9/nvhpc-20-9-cuda-multi_20.9_amd64.deb
+
+sudo apt-get install ./nvhpc-20-9_20.9_amd64.deb ./nvhpc-2020_20.9_amd64.deb ./nvhpc-20-9-cuda-multi_20.9_amd64.deb
+
+Insertar en .bashrc
+#pgi compilers
+export PATH="/opt/nvidia/hpc_sdk/Linux_x86_64/20.9/compilers/bin/:$PATH"
