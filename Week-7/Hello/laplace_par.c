@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     gettimeofday(&start_time,NULL); // Unix timer
 
-#pragma acc data create(Temperature[:][:], Temperature_last[:][:])
+#pragma acc data create(Temperature[0:ROWS+2][0:COLUMNS+2],Temperature_last[0:ROWS+2][0:COLUMNS+2])
     {   
        initialize();                   // initialize Temp_last including boundary conditions
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 	    }
 	    // periodically print test values
         if((iteration % 100) == 0) {
-            #pragma acc update self(Temperature[:][:])
+            #pragma acc update self(Temperature[0:ROWS+2][0:COLUMNS+2])
  	        track_progress(iteration);
         }
 

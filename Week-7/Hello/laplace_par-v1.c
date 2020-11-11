@@ -59,28 +59,34 @@ int main(int argc, char *argv[]) {
     initialize();                   // initialize Temp_last including boundary conditions
 
     // do until error is minimal or until max steps
-    while ( dt > MAX_TEMP_ERROR && iteration <= max_iterations ) {
+    #pragma acc data copyin(Temperature, Temperature_last)
+    {
+        while ( dt > MAX_TEMP_ERROR && iteration <= max_iterations ) {
 
-        for(i = 1; i <= ROWS; i++) {
-            for(j = 1; j <= COLUMNS; j++) {
-                Temperature[i][j] = 0.25 * (Temperature_last[i+1][j] + Temperature_last[i-1][j] +
+            #pragma acc kernels
+            for(i = 1; i <= ROWS; i++) {
+                for(j = 1; j <= COLUMNS; j++) {
+                    Temperature[i][j] = 0.25 * (Temperature_last[i+1][j] + Temperature_last[i-1][j] +
                                             Temperature_last[i][j+1] + Temperature_last[i][j-1]);
+                }
             }
-        }
-	    dt = 0.0; // reset largest temperature change
+	       dt = 0.0; // reset largest temperature change
 
-        for(i = 1; i <= ROWS; i++){
-	        for(j = 1; j <= COLUMNS; j++){
-	            dt = fmax( fabs(Temperature[i][j]-Temperature_last[i][j]), dt);
-	               Temperature_last[i][j] = Temperature[i][j];
+            #pragma acc kernels
+	       for(i = 1; i <= ROWS; i++){
+	           for(j = 1; j <= COLUMNS; j++){
+	               dt = fmax( fabs(Temperature[i][j]-Temperature_last[i][j]), dt);
+	                  Temperature_last[i][j] = Temperature[i][j];
+                }
+	       }
+            // periodically print test values
+            if((iteration % 100) == 0) {
+                #pragma acc update self(Temperature)
+                track_progress(iteration);
             }
-        }
-        // periodically print test values
-        if((iteration % 100) == 0) {
-            track_progress(iteration);
-        }
 
-	    iteration++;
+	       iteration++;
+        }
     }
 
     gettimeofday(&stop_time,NULL);
